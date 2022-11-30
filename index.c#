@@ -1,0 +1,166 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
+using System.Data.SqlClient;
+using System.Configuration;
+using System.Collections;
+using System.Web;
+using System.Globalization;
+
+
+namespace CadastrodeClientes
+{
+  public partial class CadastroDeClientes : Form
+  {
+    public CadastroDeClientes()
+    {
+      InitializeComponent();
+    }
+
+    private void Form1_Load(object sender, EventArgs e)
+    {
+
+    }
+
+    private void btnGravar_Click(object sender, EventArgs e)
+    {
+
+      try
+      {
+        if (txtNome.Text != string.Empty && txtEndereco.Text != string.Empty
+          && txtBairro.Text != string.Empty && ddlEstado.SelectedItem.ToString()
+          != string.Empty && txtTelefone.Text != string.Empty && txtCelular.Text
+          != string.Empty && txtEmail.Text != string.Empty)
+        {
+          //Instancio o SqlConnection, passando como parâmetro a string de conexão ao banco
+
+          SqlConnection conn = new SqlConnection(@"Data Source=INFO03;Initial Catalog=CadastrodeClientes;Integrated Security=True;Pooling=False");
+
+          //Instancio o SqlCommand, responsavel pelas instruções SQL e
+          //Passo ao SqlCommand que a conexão que ele usará é o SqlConnection
+          SqlCommand Comm = new SqlCommand();
+          Comm.Connection = conn;
+
+          //No CommandText do SqlCommand, passo a instrução SQL referenteà Inserção dos dados * comando para ir ao banco de dados usado*
+
+          Comm.CommandText = "INSERT INTO tbClientes (NOMECLIENTE, ENDERECOCLIENTE, " +
+                    " BAIRRO, ESTADO, TELEFONECLIENTE, CELULARCLIENTE, EMAILCLIENTE) " +
+            //Nos Values, passo os valores parametricados usado @ para garantir a segurança dos dados
+                    " VALUES (@NOMECLIENTE, @ENDERECOCLIENTE, @BAIRRO, @ESTADO," +
+                    "     @TELEFONECLIENTE, @CELULARCLIENTE, @EMAILCLIENTE) ";
+
+          //Agora passo os Valores parametrizados por meio do metodo AddWithValue
+
+          Comm.Parameters.AddWithValue("@NOMECLIENTE", txtNome.Text);
+          Comm.Parameters.AddWithValue("@ENDERECOCLIENTE", txtEndereco.Text);
+          Comm.Parameters.AddWithValue("@BAIRRO", txtBairro.Text);
+          Comm.Parameters.AddWithValue("@ESTADO", ddlEstado.SelectedItem.ToString());
+          Comm.Parameters.AddWithValue("@TELEFONECLIENTE", txtTelefone.Text);
+          Comm.Parameters.AddWithValue("@CELULARCLIENTE", txtCelular.Text);
+          Comm.Parameters.AddWithValue("@EMAILCLIENTE", txtEmail.Text);
+
+          //Abor a conexão e uso o método ExecuteNonQuery, após isso, fecho a conexão
+
+          conn.Open();
+          Comm.ExecuteNonQuery();
+          conn.Close();
+
+          //Exibo uma mensagem ao usuário de inserção realizada com seucesso
+
+          MessageBox.Show("Dados Inseridos com sucesso!", "mensagem",
+                   MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+        }
+        else
+        {
+          MessageBox.Show("Informe os Valores Corretamente para Completar o Cadastro, " +
+            "Somente os Campos Celular e Email Podem Ficar Vazios", "Erro do Sistema",
+            MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+        }
+
+      }
+      finally
+      {
+      }
+    }
+
+    private void btnNovo_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        if (MessageBox.Show("Deseja Cancelar o Cadastro e Fazer Um Novo?", "Menssagem do Sistema",
+          MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+        {
+          txtNome.Text = "";
+          txtEndereco.Text = "";
+          txtBairro.Text = "";
+          ddlEstado.SelectedIndex = -1;
+          txtTelefone.Text = "";
+          txtCelular.Text = "";
+          txtEmail.Text = "";
+        }
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+
+
+      {
+
+      }
+    }
+
+    private void btnVerCadastros_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        VerCadastros frmVerCadastros = new VerCadastros();
+        frmVerCadastros.Show();
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
+
+    private void btnNovo_Click_1(object sender, EventArgs e)
+    {
+      try
+      {
+        if (MessageBox.Show("Deseja Cancelar o Cadastro e Fazer um Novo?", "Mensagem do Sistema",
+          MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+        {
+          txtNome.Text = "";
+          txtEndereco.Text = "";
+          txtBairro.Text = "";
+          ddlEstado.SelectedIndex = -1;
+          txtTelefone.Text = "";
+          txtCelular.Text = "";
+          txtEmail.Text = "";
+        }
+      }
+      catch (Exception)
+      {
+        throw;
+      }
+    }
+
+    private void btnBusca_Click(object sender, EventArgs e)
+    {
+
+    }
+
+
+
+
+  }
+
+
+}
